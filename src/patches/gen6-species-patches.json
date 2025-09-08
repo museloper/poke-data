@@ -1,0 +1,18 @@
+{
+  "24": { "baseStats": { "atk": 85 } },
+  "51": { "baseStats": { "atk": 80 } },
+  "83": { "baseStats": { "atk": 65 } },
+  "85": { "baseStats": { "spe": 100 } },
+  "101": { "baseStats": { "spe": 140 } },
+  "103": { "baseStats": { "spd": 65 } },
+  "164": { "baseStats": { "spa": 76 } },
+  "168": { "baseStats": { "spd": 60 } },
+  "211": { "baseStats": { "def": 75 } },
+  "222": { "baseStats": { "hp": 55, "def": 85, "spd": 85 } },
+  "226": { "baseStats": { "hp": 65 } },
+  "279": { "baseStats": { "spa": 85 } },
+  "284": { "baseStats": { "spa": 80, "spe": 60 } },
+  "301": { "baseStats": { "spe": 70 } },
+  "313": { "baseStats": { "def": 55, "spd": 75 } },
+  "314": { "baseStats": { "def": 55, "spd": 75 } }
+}

@@ -71,8 +71,18 @@ function slugifyId(enName) {
     .replace(/^-+|-+$/g, '')
 }
 
+// 🟢 특성명 한국어 변환 함수
+async function getAbilityKoName(url, fallbackEn) {
+  try {
+    const ability = await fetchJSON(url)
+    const ko = pickLocalizedName(ability.names, LANG_KO)
+    return ko || toTitle(fallbackEn)
+  } catch {
+    return toTitle(fallbackEn)
+  }
+}
+
 async function buildOne(id) {
-  // p: 전투 데이터(타입/스탯/영문명/특성), s: 도감/로캘 이름
   const p = await fetchJSON(`https://pokeapi.co/api/v2/pokemon/${id}`)
   const s = await fetchJSON(`https://pokeapi.co/api/v2/pokemon-species/${id}`)
 
@@ -83,10 +93,17 @@ async function buildOne(id) {
 
   const types = p.types.sort((a, b) => a.slot - b.slot).map((t) => toKoType(t.type.name))
   const baseStats = statBlock(p.stats)
-  const abilities = p.abilities
-    .map((a) => a.ability?.name)
-    .filter(Boolean)
-    .map((n) => toTitle(n))
+
+  // abilities: 한국어 이름 가져오기
+  const abilities = []
+  for (const a of p.abilities) {
+    const url = a.ability?.url
+    const en = a.ability?.name
+    if (!url || !en) continue
+    const ko = await getAbilityKoName(url, en)
+    abilities.push(ko)
+    await sleep(40) // API 호출 배려
+  }
 
   const idSlug = slugifyId(enName)
 
@@ -167,7 +184,7 @@ async function main() {
   await fs.writeFile(path.join(baseDir, 'gen8', 'species.json'), JSON.stringify(out8, null, 2), 'utf8')
   await fs.writeFile(path.join(baseDir, 'gen9', 'species.json'), JSON.stringify(out9, null, 2), 'utf8')
 
-  console.log('✅ Wrote species.json for gen6, gen7, gen8, gen9')
+  console.log('✅ Wrote species.json for gen6, gen7, gen8, gen9 (with Korean ability names)')
 }
 
 main().catch((err) => {
